@@ -1,7 +1,7 @@
-package application.menus;
+package model.services.menus;
 
-import entities.BankAccount;
-import entities.enums.AccountType;
+import model.entities.BankAccount;
+import model.enums.AccountType;
 
 import java.util.Scanner;
 
@@ -41,5 +41,4 @@ public class CreateAccountMenu {
 
         bankAccount = new BankAccount(number, agency, name, balance, limit, AccountType.valueOf(type));
     }
-
 }

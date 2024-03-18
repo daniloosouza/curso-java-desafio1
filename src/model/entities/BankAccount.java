@@ -1,6 +1,6 @@
-package entities;
+package model.entities;
 
-import entities.enums.AccountType;
+import model.enums.AccountType;
 
 public class BankAccount {
 

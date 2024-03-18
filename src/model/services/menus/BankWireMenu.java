@@ -1,4 +1,4 @@
-package application.menus;
+package model.services.menus;
 
 import java.util.Scanner;
 
@@ -52,7 +52,4 @@ public class BankWireMenu {
         wireValue = sc.nextDouble();
 
     }
-
-
-
 }

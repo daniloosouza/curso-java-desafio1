@@ -1,7 +1,9 @@
-package application.menus;
+package model.services.menus;
 
-import application.services.AccountManagement;
-import entities.BankAccount;
+import model.entities.BankAccount;
+import model.exceptions.AccountManagementException;
+import model.services.AccountManagement;
+import model.services.VerifyWire;
 
 import java.util.*;
 
@@ -32,49 +34,50 @@ public class MainMenu {
                     createAccountMenu.show();
                     accountManagement.createBankAccount(bankAccounts, createAccountMenu.getBankAccount());
                     System.out.println("Conta criada com sucesso!");
-                    this.show();
                     break;
                 case 2:
                     accountManagement.showAccountDetails(bankAccounts);
-                    this.show();
+                    break;
                 case 3:
-                    BankDepositMenu bankDepositMenu = new BankDepositMenu();
+                    BankOperationsMenu bankDepositMenu = new BankOperationsMenu();
                     bankDepositMenu.show();
-                    accountManagement.bankDeposit(bankAccounts, bankDepositMenu.getNumber(),
-                                                  bankDepositMenu.getAgency(), bankDepositMenu.getDepositValue());
+                    accountManagement.bankDeposit(bankAccounts, bankDepositMenu.getNumber(), bankDepositMenu.getAgency(), bankDepositMenu.getValue());
                     System.out.println("Depósito realizado com sucesso!");
-                    this.show();
+                    break;
                 case 4:
-                    BankDrawMenu bankDrawMenu = new BankDrawMenu();
+                    BankOperationsMenu bankDrawMenu = new BankOperationsMenu();
                     bankDrawMenu.show();
-                    accountManagement.bankDraw(bankAccounts, bankDrawMenu.getNumber(), bankDrawMenu.getAgency(),
-                                               bankDrawMenu.getDrawValue());
+                    accountManagement.bankDraw(bankAccounts, bankDrawMenu.getNumber(), bankDrawMenu.getAgency(), bankDrawMenu.getValue());
                     System.out.println("Saque realizado com sucesso!");
-                    this.show();
+                    break;
                 case 5:
-                    ChangeLimitMenu changeLimitMenu = new ChangeLimitMenu();
+                    BankOperationsMenu changeLimitMenu = new BankOperationsMenu();
                     changeLimitMenu.show();
-                    accountManagement.changeLimit(bankAccounts, changeLimitMenu.getNumber(),
-                                                  changeLimitMenu.getAgency(), changeLimitMenu.getNewLimitValue());
+                    accountManagement.changeLimit(bankAccounts, changeLimitMenu.getNumber(), changeLimitMenu.getAgency(), changeLimitMenu.getValue());
                     System.out.println("Alteração de limite realizada com sucesso!");
-                    this.show();
+                    break;
                 case 6:
                     BankWireMenu bankWireMenu = new BankWireMenu();
                     bankWireMenu.show();
-                    accountManagement.bankWire(bankAccounts, bankWireMenu.getNumberAccountOrigin(), bankWireMenu.getAgencyAccountOrigin(),
-                                               bankWireMenu.getAgencyAccountDestiny(), bankWireMenu.getAgencyAccountDestiny(),
+                    accountManagement.bankWire(new VerifyWire(), bankAccounts, bankWireMenu.getNumberAccountOrigin(), bankWireMenu.getAgencyAccountOrigin(),
+                                               bankWireMenu.getNumberAccountDestiny(), bankWireMenu.getAgencyAccountDestiny(),
                                                bankWireMenu.getWireValue());
-                case 0:
+                    System.out.println("Transferência realizada com sucesso!");
+                    break;
+                default:
                     System.out.println("Encerrando aplicação...");
                     System.exit(0);
                     break;
             }
         } catch (InputMismatchException e) {
             System.out.println("O formato dos dados digitados está inconsistente!");
-        } catch (Exception e) {
+        } catch (AccountManagementException e){
             System.out.println(e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println("Ocorreu um erro inesperado durante o processamento!");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         } finally {
-            System.out.println("Operação cancelada!");
             this.show();
         }
 

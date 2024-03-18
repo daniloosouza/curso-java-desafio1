@@ -1,6 +1,6 @@
 package application;
 
-import application.menus.MainMenu;
+import model.services.menus.MainMenu;
 
 public class Program {
     public static void main(String[] args) {
