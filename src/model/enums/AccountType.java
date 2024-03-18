@@ -1,4 +1,4 @@
-package entities.enums;
+package model.enums;
 
 import java.util.HashMap;
 import java.util.Map;
