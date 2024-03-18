@@ -3,6 +3,7 @@ package model.services.menus;
 import model.entities.BankAccount;
 import model.exceptions.AccountManagementException;
 import model.services.AccountManagement;
+import model.services.BuildHistoryData;
 import model.services.VerifyWire;
 
 import java.util.*;
@@ -24,6 +25,7 @@ public class MainMenu {
             System.out.println("4 - Saque");
             System.out.println("5 - Alterar limite de transação diária");
             System.out.println("6 - Realizar transferência");
+            System.out.println("7 - Exportar histórico de transações");
             System.out.println("0 - Sair");
 
             int option = sc.nextInt();
@@ -63,6 +65,11 @@ public class MainMenu {
                                                bankWireMenu.getNumberAccountDestiny(), bankWireMenu.getAgencyAccountDestiny(),
                                                bankWireMenu.getWireValue());
                     System.out.println("Transferência realizada com sucesso!");
+                    break;
+                case 7:
+                    BuildHistoryData buildHistoryData = new BuildHistoryData();
+                    buildHistoryData.buildFile();
+                    System.out.println("Histórico gerado com sucesso!");
                     break;
                 default:
                     System.out.println("Encerrando aplicação...");

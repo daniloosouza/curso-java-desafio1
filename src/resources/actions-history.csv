@@ -1,0 +1,3 @@
+Data,Ação,Número,Agência,Titular,Valor da operação,Saldo Total,Tipo
+2024-03-18T17:28:11.961684100,Cadastro,111,222,Da,400.0,400.0,CONTA_CORRENTE
+2024-03-18T17:28:24.012731400,Depósito,111,222,Da,550.0,950.0,CONTA_CORRENTE

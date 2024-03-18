@@ -1,18 +1,22 @@
 package model.services;
 
 import model.entities.BankAccount;
+import model.entities.HistoryAccount;
 import model.exceptions.AccountManagementException;
 import model.services.interfaces.WireTimeRule;
 
 import java.util.List;
 
 public class AccountManagement {
+    BuildHistoryData buildHistoryData = new BuildHistoryData();
     public AccountManagement() {
     }
 
     public void createBankAccount(List<BankAccount> bankAccounts, BankAccount bankAccount) throws AccountManagementException {
         this.verifyAccount(bankAccounts, bankAccount.getAccountNumber(), bankAccount.getAccountAgency(), false);
         bankAccounts.add(bankAccount);
+        buildHistoryData.addHistoryData(bankAccount, "Cadastro", bankAccount.getAccountBalance());
+
     }
 
     public void showAccountDetails(List<BankAccount> bankAccounts) throws AccountManagementException {
@@ -35,6 +39,7 @@ public class AccountManagement {
         BankAccount obj = this.verifyAccount(bankAccounts, number, agency, true);
         this.valueIsValid(depositValue);
         obj.setAccountBalance(obj.getAccountBalance() + depositValue);
+        buildHistoryData.addHistoryData(obj, "Depósito", depositValue);
     }
 
     public void bankDraw(List<BankAccount> bankAccounts, int number, int agency, Double drawValue) throws AccountManagementException {
@@ -47,6 +52,7 @@ public class AccountManagement {
         } else {
             obj.setAccountBalance(obj.getAccountBalance() - drawValue);
             obj.setAccountLimit(obj.getAccountLimit() - drawValue);
+            buildHistoryData.addHistoryData(obj, "Saque", drawValue);
         }
 
     }
@@ -55,6 +61,7 @@ public class AccountManagement {
         BankAccount obj = this.verifyAccount(bankAccounts, number, agency, true);
         this.valueIsValid(newLimitValue);
         obj.setAccountLimit(newLimitValue);
+        buildHistoryData.addHistoryData(obj, "Alteração de Limite", newLimitValue);
 
     }
 
@@ -85,43 +92,44 @@ public class AccountManagement {
             throw new AccountManagementException("A conta de destino informada não existe!");
         } else if (!validatedWire) {
             throw new AccountManagementException("Limite de transações entre " + wireTimeRule.getInitLimit().toString() + "h e " +
-                                                 wireTimeRule.getEndLimit().toString() + "h excedido!");
+                                                         wireTimeRule.getEndLimit().toString() + "h excedido!");
         } else {
             for (BankAccount obj : bankAccounts) {
-                if (obj.getAccountAgency().equals(agencyAccountOrigin) &&
-                        obj.getAccountNumber().equals(numberAccountOrigin)) {
+                if (obj.getAccountAgency().equals(agencyAccountOrigin) && obj.getAccountNumber().equals(numberAccountOrigin)) {
                     obj.setAccountBalance(obj.getAccountBalance() - wireValue);
                     obj.setAccountLimit(obj.getAccountLimit() - wireValue);
+                    buildHistoryData.addHistoryData(obj, "Transferência - Origem", wireValue);
                 }
-                if (obj.getAccountAgency().equals(agencyAccountDestiny) &&
-                        obj.getAccountNumber().equals(numberAccountDestiny)) {
+                if (obj.getAccountAgency().equals(agencyAccountDestiny) && obj.getAccountNumber().equals(numberAccountDestiny)) {
                     obj.setAccountBalance(obj.getAccountBalance() + wireValue);
+                    buildHistoryData.addHistoryData(obj, "Transferência - Destino", wireValue);
                 }
             }
         }
 
     }
 
-    private BankAccount verifyAccount(List<BankAccount> bankAccounts, int number, int agency, boolean verifyIfExists) throws AccountManagementException {
+    private BankAccount verifyAccount(List<BankAccount> bankAccounts, int number, int agency, boolean verifyIfExists)
+            throws AccountManagementException {
         BankAccount bankAccount = new BankAccount();
         for (BankAccount obj : bankAccounts) {
             if (obj.getAccountAgency().equals(agency) && obj.getAccountNumber().equals(number)) {
-                if (verifyIfExists){
+                if (verifyIfExists) {
                     return obj;
-                }else{
+                } else {
                     throw new AccountManagementException("A conta informada já existe!");
                 }
             }
         }
-        if (verifyIfExists){
+        if (verifyIfExists) {
             throw new AccountManagementException("A conta informada não existe!");
-        }else{
+        } else {
             return bankAccount;
         }
     }
 
     private void valueIsValid(Double value) throws AccountManagementException {
-        if (value < 0){
+        if (value < 0) {
             throw new AccountManagementException("O valor informado deve ser maior que 0!");
         }
     }
