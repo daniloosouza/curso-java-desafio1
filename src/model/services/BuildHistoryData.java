@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class BuildHistoryData {
     private static final List<HistoryAccount> historyAccounts = new ArrayList<>();
-    private static final String CSV_FILE_NAME = "src/resources/actions-history.csv";
+    private static final String CSV_FILE_NAME = "src/resources/files/history/actions-history.csv";
 
     public BuildHistoryData() {
     }
