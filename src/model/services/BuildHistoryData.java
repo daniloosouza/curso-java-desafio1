@@ -57,7 +57,7 @@ public class BuildHistoryData {
 
     private String escapeSpecialCharacters(String data) {
         if (data == null) {
-            throw new IllegalArgumentException("Input data cannot be null");
+            throw new IllegalArgumentException();
         }
         String escapedData = data.replaceAll("\\R", " ");
         if (data.contains(",") || data.contains("\"") || data.contains("'")) {

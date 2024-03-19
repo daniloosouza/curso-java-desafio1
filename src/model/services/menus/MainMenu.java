@@ -49,7 +49,7 @@ public class MainMenu {
                 case 4:
                     BankOperationsMenu bankDrawMenu = new BankOperationsMenu();
                     bankDrawMenu.show();
-                    accountManagement.bankDraw(bankAccounts, bankDrawMenu.getNumber(), bankDrawMenu.getAgency(), bankDrawMenu.getValue());
+                    accountManagement.bankDraw(new VerifyWire(), bankAccounts, bankDrawMenu.getNumber(), bankDrawMenu.getAgency(), bankDrawMenu.getValue());
                     System.out.println("Saque realizado com sucesso!");
                     break;
                 case 5:

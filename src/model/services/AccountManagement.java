@@ -1,7 +1,6 @@
 package model.services;
 
 import model.entities.BankAccount;
-import model.entities.HistoryAccount;
 import model.exceptions.AccountManagementException;
 import model.services.interfaces.WireTimeRule;
 
@@ -14,6 +13,7 @@ public class AccountManagement {
 
     public void createBankAccount(List<BankAccount> bankAccounts, BankAccount bankAccount) throws AccountManagementException {
         this.verifyAccount(bankAccounts, bankAccount.getAccountNumber(), bankAccount.getAccountAgency(), false);
+        this.valueIsValid(bankAccount.getAccountLimit());
         bankAccounts.add(bankAccount);
         buildHistoryData.addHistoryData(bankAccount, "Cadastro", bankAccount.getAccountBalance());
 
@@ -42,13 +42,18 @@ public class AccountManagement {
         buildHistoryData.addHistoryData(obj, "Depósito", depositValue);
     }
 
-    public void bankDraw(List<BankAccount> bankAccounts, int number, int agency, Double drawValue) throws AccountManagementException {
+    public void bankDraw(WireTimeRule wireTimeRule, List<BankAccount> bankAccounts, int number, int agency, Double drawValue) throws AccountManagementException {
         BankAccount obj = this.verifyAccount(bankAccounts, number, agency, true);
         this.valueIsValid(drawValue);
+
+        boolean validatedWire = wireTimeRule.validatedWire(drawValue);
         if (drawValue > obj.getAccountBalance()) {
             throw new AccountManagementException("A conta informada não possui saldo suficiente!");
         } else if (drawValue > obj.getAccountLimit()) {
             throw new AccountManagementException("O valor informado é maior que o limite de transação disponível!");
+        } else if (!validatedWire) {
+            throw new AccountManagementException("Limite de transações entre " + wireTimeRule.getInitLimit().toString() + "h e " +
+                                                         wireTimeRule.getEndLimit().toString() + "h excedido!");
         } else {
             obj.setAccountBalance(obj.getAccountBalance() - drawValue);
             obj.setAccountLimit(obj.getAccountLimit() - drawValue);
@@ -69,6 +74,7 @@ public class AccountManagement {
                          int numberAccountDestiny, int agencyAccountDestiny, Double wireValue) throws AccountManagementException {
         boolean accountOriginExists = false;
         boolean accountDestinyExists = false;
+        this.valueIsValid(wireValue);
         for (BankAccount obj : bankAccounts) {
             if (obj.getAccountAgency().equals(agencyAccountOrigin) &&
                     obj.getAccountNumber().equals(numberAccountOrigin)) {
