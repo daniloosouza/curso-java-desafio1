@@ -3,10 +3,10 @@ package model.services.menus;
 import java.util.Scanner;
 
 public class BankOperationsMenu {
-    int number;
-    int agency;
+    private int number;
+    private int agency;
 
-    Double value;
+    private Double value;
 
     public BankOperationsMenu() {
     }

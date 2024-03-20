@@ -3,12 +3,12 @@ package model.services.menus;
 import java.util.Scanner;
 
 public class BankWireMenu {
-    int numberAccountOrigin;
-    int agencyAccountOrigin;
-    int numberAccountDestiny;
-    int agencyAccountDestiny;
+    private int numberAccountOrigin;
+    private int agencyAccountOrigin;
+    private int numberAccountDestiny;
+    private int agencyAccountDestiny;
 
-    Double wireValue;
+    private Double wireValue;
 
     public BankWireMenu() {
     }

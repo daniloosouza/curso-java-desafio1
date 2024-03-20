@@ -1,0 +1,140 @@
+classDiagram
+direction BT
+class AccountManagement {
+  + AccountManagement() 
+  - verifyAccount(List~BankAccount~, int, int, boolean) BankAccount
+  + createBankAccount(List~BankAccount~, BankAccount) void
+  + bankDeposit(List~BankAccount~, int, int, Double) void
+  - valueIsValid(Double) void
+  + bankDraw(WireTimeRule, List~BankAccount~, int, int, Double) void
+  + showAccountDetails(List~BankAccount~) void
+  + changeLimit(List~BankAccount~, int, int, Double) void
+  + bankWire(WireTimeRule, List~BankAccount~, int, int, int, int, Double) void
+}
+class AccountManagementException {
+  + AccountManagementException(String) 
+}
+class AccountType {
+<<enumeration>>
+  CONTA_CORRENTE = 1
+  CONTA_POUPANCA = 2
+  CONTA_SALARIO = 3
+  - AccountType(int) 
+  - int value
+  + values() AccountType[]
+  + valueOf(int) AccountType
+  + valueOf(String) AccountType
+   int value
+}
+class BankAccount {
+  + BankAccount(Integer, Integer, String, Double, Double, AccountType) 
+  + BankAccount() 
+  - Double accountBalance
+  - Double accountLimit
+  - Integer accountAgency
+  - AccountType accountType
+  - Integer accountNumber
+  - String customerName
+  + toString() String
+   Double accountLimit
+   Integer accountNumber
+   String customerName
+   Integer accountAgency
+   AccountType accountType
+   Double accountBalance
+}
+class BankOperationsMenu {
+  + BankOperationsMenu() 
+  - int agency
+  - Double value
+  - int number
+  + show() void
+   Double value
+   int number
+   int agency
+}
+class BankWireMenu {
+  + BankWireMenu() 
+  - Double wireValue
+  - int numberAccountDestiny
+  - int numberAccountOrigin
+  - int agencyAccountOrigin
+  - int agencyAccountDestiny
+  + show() void
+   int agencyAccountDestiny
+   Double wireValue
+   int numberAccountOrigin
+   int numberAccountDestiny
+   int agencyAccountOrigin
+}
+class BuildHistoryData {
+  - List historyAccounts  
+  + BuildHistoryData() 
+  - escapeSpecialCharacters(String) String
+  + addHistoryData(BankAccount, String, Double) void
+  + buildFile() void
+  - convertToCSV(String[]) String
+}
+class CreateAccountMenu {
+  + CreateAccountMenu() 
+  - BankAccount bankAccount
+  + show() void
+   BankAccount bankAccount
+}
+class HistoryAccount {
+  - LocalDateTime date
+  - String action
+  - Integer accountNumber
+  - Integer accountAgency
+  - String customerName
+  - Double value
+  - Double balance
+  - String type  
+  + HistoryAccount(String, Integer, Integer, String, Double, Double, String) 
+  + toStringArray() String[]
+}
+class MainMenu {
+  - List bankAccounts  
+  + MainMenu() 
+  + show() void
+}
+class Program {
+  + Program() 
+  + main(String[]) void
+}
+class VerifyWire {
+  + VerifyWire() 
+  - LocalTime initLimit
+  - LocalTime endLimit
+  + validatedWire(Double) boolean
+  - wireLimited() boolean
+   LocalTime initLimit
+   LocalTime endLimit
+}
+class WireTimeRule {
+<<Interface>>
+  + validatedWire(Double) boolean
+   LocalTime initLimit
+   LocalTime endLimit
+}
+
+AccountManagement  ..>  AccountManagementException : «create»
+AccountManagement  ..>  BankAccount : «create»
+AccountManagement "1" *--> "buildHistoryData 1" BuildHistoryData 
+AccountManagement  ..>  BuildHistoryData : «create»
+BankAccount "1" *--> "accountType 1" AccountType 
+BuildHistoryData  ..>  AccountManagementException : «create»
+BuildHistoryData  ..>  HistoryAccount : «create»
+BuildHistoryData "1" *--> "historyAccounts *" HistoryAccount 
+CreateAccountMenu  ..>  BankAccount : «create»
+CreateAccountMenu "1" *--> "bankAccount 1" BankAccount 
+MainMenu  ..>  AccountManagement : «create»
+MainMenu "1" *--> "accountManagement 1" AccountManagement 
+MainMenu "1" *--> "bankAccounts *" BankAccount 
+MainMenu  ..>  BankOperationsMenu : «create»
+MainMenu  ..>  BankWireMenu : «create»
+MainMenu  ..>  BuildHistoryData : «create»
+MainMenu  ..>  CreateAccountMenu : «create»
+MainMenu  ..>  VerifyWire : «create»
+Program  ..>  MainMenu : «create»
+VerifyWire  ..>  WireTimeRule 
