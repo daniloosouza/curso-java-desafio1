@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class CreateAccountMenu {
 
-    BankAccount bankAccount = new BankAccount();
+    private BankAccount bankAccount = new BankAccount();
 
     public BankAccount getBankAccount() {
         return bankAccount;

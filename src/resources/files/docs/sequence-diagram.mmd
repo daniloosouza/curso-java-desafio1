@@ -1,0 +1,17 @@
+sequenceDiagram 
+actor u as Usuario
+participant p as Program
+participant m as Menus
+participant s as Services
+autonumber
+u->>p: Inicia a aplicação
+p->>m: Executa a classe de Menu inicial
+m->>p: Exibe o Menu inicial para o usuário
+u->>p: Escolhe a opção desejada
+p->>m: Executa a classe referente a opção escolhida
+m-->>p: Exibe o menu (Caso exista)
+u-->>p: Insere as informações
+p->>s: Executa a classe de processamento
+s->>s: Realiza as validações necessárias
+s->>s: Executa a operação escolhida (Criação, Depósito, saque, etc.)
+s->>p: Retorna a mensagem com status de sucesso ou erro
